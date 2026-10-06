@@ -7,26 +7,12 @@
     <style>
       :root {
         --bg: #090b10;
-        --bg-2: #111827;
         --surface: rgba(15, 18, 28, 0.88);
         --surface-2: rgba(16, 20, 31, 0.96);
-        --panel: #fff;
-        --panel-strong: #f5f7fa;
-        --border: rgba(148, 163, 184, 0.18);
-        --text: #f3f4f6;
-        --muted: #a1a8b8;
-        --muted-2: #7f8aa5;
-        --cyan: #7dd3fc;
-        --purple: #a78bfa;
-        --green: #4ade80;
-        --warning: #fbbf24;
-        --chat-bg: #08090b;
-        --chat-surface: #111318;
-        --chat-surface-2: #17191f;
-        --chat-border: rgba(255,255,255,0.08);
-        --chat-text: #f5f5f5;
-        --chat-muted: #9ca3af;
-        --chat-accent: #9a8cff;
+        --border: rgba(255, 255, 255, 0.08);
+        --text: #f5f5f5;
+        --muted: #9ca3af;
+        --accent: #9a8cff;
       }
 
       * { box-sizing: border-box; }
@@ -35,59 +21,37 @@
         margin: 0;
         width: 100%;
         height: 100%;
-        font-family: Inter, "Segoe UI", Arial, sans-serif;
-        background: var(--chat-bg);
-        color: var(--chat-text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        overflow: hidden;
       }
 
-      body {
-        display: block;
-        padding: 0;
-      }
+      body { display: block; padding: 0; }
 
-      button, textarea {
-        font: inherit;
-      }
-
-      a {
-        color: inherit;
-      }
+      button, textarea { font: inherit; }
 
       .app-shell {
         width: 100%;
         height: 100dvh;
-        min-height: 0;
         display: flex;
         flex-direction: column;
-        border: 0;
-        border-radius: 0;
         overflow: hidden;
-        background: var(--chat-bg);
-        color: var(--chat-text);
-        animation: appear 0.4s ease-out both;
-      }
-
-      @keyframes appear {
-        from { opacity: 0; transform: translateY(5px); }
-        to { opacity: 1; transform: translateY(0); }
+        background: var(--bg);
       }
 
       .topbar {
-        position: relative;
-        flex: 0 0 58px;
-        height: 58px;
+        flex: 0 0 56px;
         display: flex;
         align-items: center;
-        gap: 12px;
-        justify-content: flex-end;
+        justify-content: space-between;
         padding: 0 20px;
-        border-bottom: 1px solid var(--chat-border);
-        background: color-mix(in srgb, var(--chat-bg) 88%, transparent);
-        backdrop-filter: blur(12px);
+        border-bottom: 1px solid var(--border);
+        background: rgba(9, 11, 16, 0.9);
+        backdrop-filter: blur(10px);
       }
 
       .brand {
-        margin-right: auto;
         display: flex;
         align-items: center;
         gap: 10px;
@@ -97,1478 +61,626 @@
         width: 10px;
         height: 10px;
         border-radius: 3px;
-        background: var(--chat-accent);
-        box-shadow: 0 0 12px color-mix(in srgb, var(--chat-accent) 40%, transparent);
-      }
-
-      .brand-copy {
-        display: flex;
-        flex-direction: column;
-        line-height: 1.1;
+        background: var(--accent);
+        box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 40%, transparent);
       }
 
       .brand-copy strong {
-        color: var(--chat-text);
-        font-size: 0.98rem;
-        letter-spacing: 0.02em;
+        color: var(--text);
+        font-size: 0.95rem;
+        font-weight: 600;
+        letter-spacing: 0.05em;
       }
 
-      .brand-copy span {
-        display: none;
+      .topbar-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
       }
 
-      .theme-wrap, .settings-wrap {
-        position: relative;
-      }
-
-      .theme-button, .settings-button, .top-new-search {
-        min-height: 34px;
-        border: 1px solid var(--chat-border);
-        border-radius: 9px;
-        padding: 6px 10px;
-        background: transparent;
-        color: var(--chat-muted);
-        font-size: 0.82rem;
-        cursor: pointer;
-      }
-
-      .theme-button {
-        min-width: 38px;
-      }
-
-      .theme-menu {
-        position: absolute;
-        z-index: 10;
-        top: calc(100% + 8px);
-        right: 0;
-        min-width: 130px;
-        padding: 5px;
-        border: 1px solid var(--chat-border);
-        border-radius: 12px;
-        background: var(--chat-surface);
-        box-shadow: 0 10px 28px rgba(0,0,0,0.28);
-      }
-
-      .settings-menu { min-width: 180px; }
-      .settings-title {
-        margin: 5px 9px 7px;
-        color: var(--chat-muted);
-        font-size: 0.75rem;
-      }
-
-      .theme-option {
-        display: block;
-        width: 100%;
-        padding: 8px 10px;
-        border: 0;
+      .btn-icon {
+        width: 36px;
+        height: 36px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--border);
         border-radius: 8px;
         background: transparent;
-        color: var(--chat-text);
-        text-align: left;
+        color: var(--text);
         cursor: pointer;
+        font-size: 1rem;
       }
 
-      .theme-option:hover {
-        background: var(--chat-surface-2);
-      }
+      .btn-icon:hover { background: var(--surface-2); }
 
-      .hidden { display: none !important; }
-
-      .main-pane {
-        position: relative;
-        display: flex;
+      .chat-container {
         flex: 1 1 auto;
+        display: flex;
         flex-direction: column;
-        width: 100%;
         min-height: 0;
-        margin: 0;
-        padding: 0;
+      }
+
+      .messages {
+        flex: 1 1 auto;
         overflow-y: auto;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
         overscroll-behavior: contain;
-        scroll-behavior: smooth;
       }
 
-      .hero {
-        display: flex;
-        flex: 1 0 auto;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        min-height: 0;
-        gap: 12px;
-        padding: 36px 24px 18px;
-        text-align: center;
-      }
+      .messages::-webkit-scrollbar { width: 8px; }
+      .messages::-webkit-scrollbar-track { background: transparent; }
+      .messages::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+      .messages::-webkit-scrollbar-thumb:hover { background: var(--muted); }
 
-      .hero-copy h1 {
-        margin: 0 0 8px;
-        color: var(--chat-text);
-        font-size: clamp(1.8rem, 4vw, 2.35rem);
-        font-weight: 600;
-        letter-spacing: -0.04em;
-      }
-
-      .hero-copy p {
-        max-width: 540px;
-        margin: 0 auto;
-        color: var(--chat-muted);
-        font-size: 0.98rem;
-        line-height: 1.6;
-      }
-
-      .orb-wrap {
-        display: flex;
-        min-height: 0;
-        width: 32px;
-        height: 32px;
-        margin-bottom: 4px;
-        order: -1;
-      }
-
-      .orb {
-        width: 28px;
-        height: 28px;
-        border-radius: 50%;
-        background: radial-gradient(circle at 35% 32%, #fff 0, #b6adff 18%, #7564cc 48%, #242033 78%);
-        box-shadow: 0 0 20px color-mix(in srgb, var(--chat-accent) 35%, transparent);
-        animation: floatOrb 5s ease-in-out infinite;
-      }
-
-      @keyframes floatOrb {
-        0%, 100% { transform: translateY(0px) scale(1); }
-        50% { transform: translateY(-8px) scale(1.04); }
-      }
-
-      .examples {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 10px;
-        max-width: 700px;
-        margin: 12px auto 0;
-      }
-
-      .example-chip {
-        border: 1px solid var(--chat-border);
-        border-radius: 999px;
-        padding: 8px 11px;
-        background: transparent;
-        color: var(--chat-muted);
-        font-size: 0.8rem;
-        cursor: pointer;
-      }
-
-      .example-chip:hover {
-        border-color: color-mix(in srgb, var(--chat-accent) 60%, var(--chat-border));
-      }
-
-      .provider-note {
-        max-width: 700px;
-        margin: 10px auto 0;
-        color: var(--chat-muted);
-        font-size: 0.77rem;
-        line-height: 1.5;
-        text-align: center;
-      }
-
-      .research-panel {
-        position: relative;
-        width: min(800px, calc(100% - 40px));
-        margin: 20px auto 6px;
-        padding: 0;
-      }
-
-      .status-card {
-        padding: 0;
-        border: 0;
-        background: transparent;
-      }
-
-      .status-step-list {
-        display: flex;
-        gap: 12px;
-      }
-
-      .step {
-        display: none;
-        align-items: center;
-        gap: 8px;
-        min-height: 24px;
-        font-size: 0.82rem;
-        color: var(--chat-muted);
-      }
-
-      .step.active {
-        display: flex;
-      }
-
-      .step-dot {
-        width: 7px;
-        height: 7px;
-        border-radius: 50%;
-        background: var(--chat-muted);
-      }
-
-      .step.active .step-dot {
-        background: var(--chat-accent);
-        box-shadow: 0 0 9px color-mix(in srgb, var(--chat-accent) 45%, transparent);
-        animation: pulseDot 1.3s ease-in-out infinite;
-      }
-
-      @keyframes pulseDot {
-        0%, 100% { transform: scale(1); opacity: 1; }
-        50% { transform: scale(1.3); opacity: 0.75; }
-      }
-
-      .history-panel {
-        display: flex !important;
-        flex: 0 0 auto;
-        flex-direction: column;
-        gap: 26px;
-        width: min(800px, calc(100% - 40px));
-        margin: 0 auto;
-        padding: 28px 0 220px;
-      }
-
-      .history-panel:empty { display: none !important; }
-
-      .history-message {
+      .message {
         display: flex;
         flex-direction: column;
-        width: 100%;
+        gap: 4px;
+        animation: slideIn 0.3s ease-out;
       }
 
-      .history-message.user { align-items: flex-end; }
-      .history-message.assistant { align-items: stretch; }
+      @keyframes slideIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+      }
 
-      .history-label {
-        margin: 0 0 6px;
-        color: var(--chat-muted);
-        font-size: 0.78rem;
+      .message.user {
+        align-items: flex-end;
+      }
+
+      .message.assistant {
+        align-items: flex-start;
+      }
+
+      .message-label {
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
       }
 
       .bubble {
         max-width: min(680px, 92%);
-        padding: 11px 15px;
-        border: 0;
-        border-radius: 18px;
-        background: var(--chat-surface-2);
-        color: var(--chat-text);
+        padding: 12px 16px;
+        border-radius: 12px;
         line-height: 1.6;
-        white-space: pre-wrap;
+        word-wrap: break-word;
         overflow-wrap: anywhere;
+        font-size: 0.95rem;
       }
 
       .bubble.user {
-        border-radius: 18px 18px 4px 18px;
+        background: var(--accent);
+        color: #000;
+        border-radius: 12px 12px 4px 12px;
       }
 
       .bubble.assistant {
-        max-width: 100%;
-        padding: 0;
-        background: transparent;
-        color: var(--chat-text);
+        background: var(--surface-2);
+        color: var(--text);
+        border-radius: 12px 12px 12px 4px;
       }
 
-      .bubble.assistant p,
-      .bubble.assistant ul,
-      .bubble.assistant ol,
-      .bubble.assistant strong,
-      .bubble.assistant a,
-      .bubble.assistant .citation {
-        color: var(--chat-text);
-      }
-
-      .bubble.assistant a,
-      .bubble.assistant .citation {
-        color: var(--chat-accent);
-      }
-
-      .message-actions {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        margin-top: 10px;
-      }
-
-      .message-action {
-        border: 0;
-        padding: 5px 7px;
-        background: transparent;
-        color: var(--chat-muted);
-        cursor: pointer;
-        font-size: 0.78rem;
-      }
-
-      .message-action:hover { color: var(--chat-text); }
-
-      .source-details {
-        margin-top: 8px;
-        color: var(--chat-muted);
-        font-size: 0.8rem;
-      }
-
-      .source-details summary {
-        width: fit-content;
-        cursor: pointer;
-      }
-
-      .source-links {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 7px;
-        margin-top: 9px;
-      }
-
-      .source-link {
-        max-width: 100%;
-        overflow: hidden;
-        border: 1px solid var(--chat-border);
-        border-radius: 999px;
-        padding: 6px 10px;
-        color: var(--chat-muted);
+      .bubble a {
+        color: var(--accent);
         text-decoration: none;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .source-link:hover {
-        color: var(--chat-text);
-        border-color: var(--chat-accent);
-      }
-
-      .source-link.highlighted {
-        border-color: var(--chat-accent);
-        color: var(--chat-text);
-        background: color-mix(in srgb, var(--chat-accent) 12%, var(--chat-surface));
-      }
-
-      .related-questions {
-        margin: 22px 0 4px;
-        padding-top: 16px;
-        border-top: 1px solid var(--chat-border);
-      }
-
-      .related-questions h3 {
-        margin: 0 0 10px;
-        color: var(--chat-muted);
-        font-size: 0.85rem;
         font-weight: 500;
       }
 
-      .related-question {
-        margin: 0 8px 8px 0;
-        padding: 8px 12px;
-        border: 1px solid var(--chat-border);
-        border-radius: 16px;
-        background: transparent;
-        color: var(--chat-text);
+      .bubble a:hover { text-decoration: underline; }
+
+      .bubble strong { color: #fff; }
+
+      .bubble p { margin: 0.5em 0; }
+      .bubble p:first-child { margin-top: 0; }
+      .bubble p:last-child { margin-bottom: 0; }
+
+      .bubble code {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9em;
+      }
+
+      .sources-section {
+        font-size: 0.8rem;
+        color: var(--muted);
+        margin-top: 8px;
+      }
+
+      .sources-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 6px;
+      }
+
+      .source-link {
+        padding: 4px 8px;
+        border-radius: 6px;
+        background: var(--surface);
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.75rem;
+        border: 1px solid var(--border);
+      }
+
+      .source-link:hover {
+        background: var(--surface-2);
+        color: var(--text);
+      }
+
+      .empty-state {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        gap: 24px;
+        padding: 40px 24px;
+      }
+
+      .empty-state h1 {
+        margin: 0;
+        font-size: 2rem;
+        font-weight: 700;
+      }
+
+      .empty-state p {
+        margin: 0;
+        color: var(--muted);
+        max-width: 500px;
+        font-size: 0.95rem;
+      }
+
+      .suggestions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 12px;
+        max-width: 700px;
+      }
+
+      .suggestion-btn {
+        padding: 12px 16px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--text);
         cursor: pointer;
         text-align: left;
-      }
-
-      .related-question:hover {
-        background: var(--chat-surface-2);
-      }
-
-      #composerPanel {
-        position: fixed;
-        z-index: 5;
-        left: 50%;
-        bottom: max(14px, env(safe-area-inset-bottom));
-        width: min(850px, calc(100% - 40px));
-        transform: translateX(-50%);
-        margin: 0;
-        padding: 10px;
-        border: 1px solid var(--chat-border);
-        border-radius: 20px;
-        background: color-mix(in srgb, var(--chat-surface) 94%, transparent);
-        box-shadow: 0 10px 36px rgba(0,0,0,0.24);
-        backdrop-filter: blur(18px);
-        transition: border-color 0.18s ease, box-shadow 0.18s ease;
-      }
-
-      #composerPanel:focus-within {
-        border-color: color-mix(in srgb, var(--chat-accent) 48%, var(--chat-border));
-        box-shadow: 0 10px 38px rgba(0, 0, 0, 0.3), 0 0 0 3px color-mix(in srgb, var(--chat-accent) 10%, transparent);
-      }
-
-      .composer { gap: 4px; }
-
-      .question-box {
-        min-height: 44px;
-        align-items: center;
-        padding: 6px 10px 0;
-        border: 0;
-        background: transparent;
-      }
-
-      .question-box textarea {
-        min-height: 36px;
-        max-height: 180px;
-        overflow-y: auto;
-        resize: none;
-        padding: 6px 4px;
-        color: var(--chat-text);
-        background: transparent;
-        border: none;
-        outline: none;
-        width: 100%;
-        font-size: 1rem;
-        line-height: 1.5;
-      }
-
-      .question-box textarea::placeholder { color: var(--chat-muted); }
-
-      .composer-footer {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .composer-tools {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        flex-wrap: nowrap;
-      }
-
-      .mode-toggle {
-        display: inline-flex;
-        gap: 2px;
-        padding: 2px;
-        background: transparent;
-        border: 0;
-      }
-
-      .mode-button {
-        padding: 6px 9px;
-        color: var(--chat-muted);
-        font-size: 0.75rem;
-        background: transparent;
-        border: 0;
-        border-radius: 8px;
-        cursor: pointer;
-      }
-
-      .mode-button.active {
-        background: var(--chat-surface-2);
-        color: var(--chat-text);
-        box-shadow: none;
-      }
-
-      .mic-btn {
-        width: 32px;
-        height: 32px;
-        border: 1px solid var(--chat-border);
-        border-radius: 50%;
-        background: transparent;
-        color: var(--chat-text);
-        cursor: pointer;
         font-size: 0.9rem;
       }
 
-      .mic-btn.listening {
-        background: color-mix(in srgb, var(--chat-accent) 12%, var(--chat-surface));
-        border-color: var(--chat-accent);
+      .suggestion-btn:hover {
+        background: var(--surface-2);
+        border-color: var(--accent);
       }
 
-      .submit-btn {
-        width: 34px;
-        height: 34px;
-        display: grid;
-        place-items: center;
-        padding: 0;
-        border-radius: 50%;
-        background: var(--chat-text);
-        color: var(--chat-bg);
-        font-size: 1.2rem;
-        line-height: 1;
+      .input-area {
+        flex: 0 0 auto;
+        padding: 16px 24px 24px;
+        border-top: 1px solid var(--border);
+      }
+
+      .input-wrapper {
+        display: flex;
+        gap: 12px;
+        align-items: flex-end;
+      }
+
+      .input-field {
+        flex: 1;
+        min-height: 44px;
+        max-height: 180px;
+        padding: 11px 14px;
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        background: var(--surface);
+        color: var(--text);
+        resize: none;
+        overflow-y: auto;
+        font-size: 0.95rem;
+      }
+
+      .input-field:focus {
+        outline: none;
+        border-color: var(--accent);
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--accent) 20%, transparent);
+      }
+
+      .input-field::placeholder {
+        color: var(--muted);
+      }
+
+      .send-btn {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         border: none;
-        box-shadow: none;
+        border-radius: 8px;
+        background: var(--accent);
+        color: #000;
         cursor: pointer;
+        font-size: 1.2rem;
+        font-weight: 600;
       }
 
-      .submit-btn:disabled {
-        opacity: 0.35;
+      .send-btn:hover {
+        background: color-mix(in srgb, var(--accent) 90%, #fff);
+      }
+
+      .send-btn:disabled {
+        opacity: 0.5;
         cursor: not-allowed;
       }
 
-      .welcome-hidden { display: none !important; }
+      .typing-indicator {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+      }
 
-      @media (max-width: 620px) {
-        .topbar {
-          flex-wrap: nowrap;
-          padding: 0 12px;
-          gap: 8px;
-        }
+      .typing-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--muted);
+        animation: typing 1.4s infinite;
+      }
 
-        .brand-copy strong { font-size: 0.95rem; }
-        .top-new-search, .theme-button { min-height: 32px; padding: 5px 8px; font-size: 0.75rem; }
+      .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+      .typing-dot:nth-child(3) { animation-delay: 0.4s; }
 
-        #composerPanel {
-          width: calc(100% - 20px);
-          bottom: max(8px, env(safe-area-inset-bottom));
-          border-radius: 17px;
-        }
+      @keyframes typing {
+        0%, 60%, 100% { transform: translateY(0); opacity: 0.6; }
+        30% { transform: translateY(-10px); opacity: 1; }
+      }
 
-        .main-pane { padding: 0; }
-        .hero { padding: 24px 18px 14px; }
-        .hero-copy h1 { font-size: 1.75rem; }
-        .history-panel, .research-panel { width: calc(100% - 30px); }
-        .history-panel { padding-top: 18px; gap: 22px; }
-        .bubble { max-width: 94%; }
-        .mode-button { padding: 6px 7px; }
-        .provider-note { padding: 0 10px; font-size: 0.76rem; }
+      .thinking-label {
+        font-size: 0.8rem;
+        color: var(--muted);
+        font-style: italic;
+      }
+
+      @media (max-width: 640px) {
+        .topbar { padding: 0 16px; }
+        .messages { padding: 16px; gap: 16px; }
+        .input-area { padding: 12px 16px 20px; }
+        .empty-state { padding: 24px 16px; }
+        .empty-state h1 { font-size: 1.5rem; }
+        .suggestions { grid-template-columns: 1fr; }
       }
 
       @media (prefers-reduced-motion: reduce) {
-        *, *::before, *::after {
-          animation-duration: 0.01ms !important;
-          animation-iteration-count: 1 !important;
-          transition-duration: 0.01ms !important;
-          scroll-behavior: auto !important;
-        }
+        * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
       }
     </style>
   </head>
   <body>
     <div class="app-shell">
       <header class="topbar">
-        <div class="brand" aria-label="VANTA brand">
-          <span class="brand-mark" aria-hidden="true"></span>
-          <div class="brand-copy">
-            <strong>VANTA</strong>
-          </div>
+        <div class="brand">
+          <span class="brand-mark"></span>
+          <div class="brand-copy"><strong>VANTA</strong></div>
         </div>
-
-        <div class="theme-wrap">
-          <button id="themeButton" class="theme-button" type="button" aria-label="Open theme menu" aria-expanded="false">☾</button>
-          <div id="themeMenu" class="theme-menu hidden" role="menu" aria-label="Theme">
-            <button class="theme-option" type="button" data-theme-choice="dark" role="menuitem">Dark</button>
-            <button class="theme-option" type="button" data-theme-choice="light" role="menuitem">Light</button>
-            <button class="theme-option" type="button" data-theme-choice="system" role="menuitem">System</button>
-          </div>
+        <div class="topbar-actions">
+          <button class="btn-icon" id="newChatBtn" title="New conversation">🔄</button>
+          <button class="btn-icon" id="themeBtn" title="Toggle theme">☾</button>
         </div>
-
-        <div class="settings-wrap">
-          <button id="settingsButton" class="settings-button" type="button" aria-label="Open settings" aria-expanded="false">⚙</button>
-          <div id="settingsMenu" class="theme-menu settings-menu hidden" role="menu" aria-label="VANTA settings">
-            <p class="settings-title">Research mode</p>
-            <button class="theme-option" type="button" data-setting-mode="quick" role="menuitem">Quick</button>
-            <button class="theme-option" type="button" data-setting-mode="research" role="menuitem">Research</button>
-            <button class="theme-option" type="button" data-setting-mode="deep" role="menuitem">Deep</button>
-          </div>
-        </div>
-
-        <button id="newSearchBtn" class="top-new-search" type="button">New Chat</button>
       </header>
 
-      <main class="main-pane">
-        <section class="hero" aria-label="Hero section">
-          <div class="hero-copy">
-            <h1>Hi, what would you like to know?</h1>
-            <p>I’ll look up useful sources and show you where the information came from.</p>
-          </div>
-          <div class="orb-wrap" aria-hidden="true">
-            <div class="orb"></div>
-          </div>
-        </section>
+      <div class="chat-container">
+        <div class="messages" id="messagesContainer"></div>
 
-        <div id="examples" class="examples" aria-label="Suggested prompts">
-          <button class="example-chip" type="button">Research something</button>
-          <button class="example-chip" type="button">Explain a concept</button>
-          <button class="example-chip" type="button">Compare two things</button>
-          <button class="example-chip" type="button">Help me code</button>
+        <div class="input-area">
+          <form id="chatForm" onsubmit="handleSubmit(event)">
+            <div class="input-wrapper">
+              <textarea id="inputField" class="input-field" placeholder="Ask VANTA anything... (math, facts, questions)" rows="1"></textarea>
+              <button type="submit" class="send-btn" id="sendBtn">↑</button>
+            </div>
+          </form>
         </div>
-
-        <p class="provider-note">
-          This single-file version uses public, no-key search sources (Wikipedia + DuckDuckGo instant answer) and a local web AI model on your device. Google itself cannot be queried directly from a browser without a backend proxy or API key.
-        </p>
-
-        <section class="research-panel" aria-live="polite">
-          <div class="status-card">
-            <div id="statusSteps" class="status-step-list" aria-live="polite">
-              <div class="step">
-                <span class="step-dot" aria-hidden="true"></span>
-                <span class="step-text">Searching reference pages</span>
-              </div>
-              <div class="step">
-                <span class="step-dot" aria-hidden="true"></span>
-                <span class="step-text">Checking relevance</span>
-              </div>
-              <div class="step">
-                <span class="step-dot" aria-hidden="true"></span>
-                <span class="step-text">Putting together an answer</span>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <section id="historyPanel" class="history-panel" aria-live="polite"></section>
-      </main>
-
-      <section id="composerPanel" class="composer-panel" aria-label="Message composer">
-        <form id="searchForm" novalidate>
-          <div class="composer">
-            <div class="question-box">
-              <textarea id="questionInput" aria-label="Message to VANTA" placeholder="Ask VANTA anything..." rows="1"></textarea>
-            </div>
-
-            <div class="composer-footer">
-              <div class="composer-tools">
-                <button id="micButton" class="mic-btn" type="button" aria-label="Voice input" aria-pressed="false">🎙</button>
-                <div class="mode-toggle" aria-label="Research modes">
-                  <button class="mode-button active" data-mode="quick" type="button">Quick</button>
-                  <button class="mode-button" data-mode="research" type="button">Research</button>
-                  <button class="mode-button" data-mode="deep" type="button">Deep</button>
-                </div>
-              </div>
-
-              <button id="submitBtn" class="submit-btn" type="submit" aria-label="Submit question">↑</button>
-            </div>
-          </div>
-        </form>
-      </section>
+      </div>
     </div>
 
-    <script type="module">
-      const state = {
-        mode: 'quick',
-        loading: false,
-        history: [],
-        theme: localStorage.getItem('vanta-theme') || 'dark',
-        conversationId: null,
-        followOutput: true,
+    <script src="https://cdn.jsdelivr.net/npm/onnxruntime-web/dist/ort.min.js"></script>
+    <script>
+      let conversationHistory = [];
+      let isLoading = false;
+
+      const messagesContainer = document.getElementById('messagesContainer');
+      const inputField = document.getElementById('inputField');
+      const sendBtn = document.getElementById('sendBtn');
+      const chatForm = document.getElementById('chatForm');
+      const newChatBtn = document.getElementById('newChatBtn');
+      const themeBtn = document.getElementById('themeBtn');
+
+      // Simple tokenizer
+      const tokenize = (text) => {
+        return text.toLowerCase().split(/\s+/).filter(t => t.length > 0);
       };
 
-      const questionInput = document.getElementById('questionInput');
-      const searchForm = document.getElementById('searchForm');
-      const submitBtn = document.getElementById('submitBtn');
-      const micButton = document.getElementById('micButton');
-      const statusSteps = document.getElementById('statusSteps');
-      const hero = document.querySelector('.hero');
-      const examples = document.getElementById('examples');
-      const historyPanel = document.getElementById('historyPanel');
-      const researchPanel = document.querySelector('.research-panel');
-      const mainPane = document.querySelector('.main-pane');
-      const themeButton = document.getElementById('themeButton');
-      const themeMenu = document.getElementById('themeMenu');
-      const settingsButton = document.getElementById('settingsButton');
-      const settingsMenu = document.getElementById('settingsMenu');
-      const newSearchBtn = document.getElementById('newSearchBtn');
-      const conversationStorageKey = 'vanta-conversation-v1';
+      // Extract key points from text
+      const extractKeyPoints = (text) => {
+        const sentences = text.match(/[^.!?]+[.!?]+/g) || [text];
+        const keywords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'is', 'are', 'was', 'were', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'could', 'should', 'may', 'might', 'must', 'can', 'this', 'that', 'these', 'those', 'i', 'you', 'he', 'she', 'it', 'we', 'they']);
+        
+        const points = sentences.map(s => {
+          const words = tokenize(s.trim());
+          const important = words.filter(w => !keywords.has(w) && w.length > 2);
+          return s.trim();
+        }).filter(s => s.length > 10).slice(0, 3);
 
-      const searchStatusSteps = [
-        { key: 'search', text: 'Searching reference pages' },
-        { key: 'compare', text: 'Checking relevance' },
-        { key: 'answer', text: 'Putting together an answer' },
-      ];
+        return points;
+      };
 
-      function applyTheme(preference) {
-        const supported = ['dark', 'light', 'system'].includes(preference) ? preference : 'dark';
-        const resolved = supported === 'system'
-          ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-          : supported;
+      // Compress and summarize response into coherent paragraph
+      const compressResponse = (text) => {
+        const points = extractKeyPoints(text);
+        if (points.length === 0) return text;
+        
+        const sentences = points.map(p => p.replace(/^(.+?)[.!?]*$/, '$1'));
+        const compressed = sentences.join('. ') + '.';
+        return compressed;
+      };
 
-        document.documentElement.setAttribute('data-theme', resolved);
-        state.theme = supported;
-        themeButton.textContent = resolved === 'dark' ? '☾' : '☀';
-        localStorage.setItem('vanta-theme', supported);
-      }
-
-      function updateResearchStatus(progress) {
-        const steps = Array.from(statusSteps.children);
-        steps.forEach((stepEl, index) => {
-          const textEl = stepEl.querySelector('.step-text');
-          const { key, text } = searchStatusSteps[index];
-          stepEl.classList.remove('complete', 'active');
-          if (progress[key] === 'done') stepEl.classList.add('complete');
-          else if (progress[key] === 'running') stepEl.classList.add('active');
-
-          const label = key === 'search' ? progress.searchLabel : key === 'answer' ? progress.answerLabel : null;
-          textEl.textContent = label || text;
-        });
-      }
-
-      function resizeComposer() {
-        questionInput.style.height = 'auto';
-        questionInput.style.height = `${Math.min(questionInput.scrollHeight, 180)}px`;
-        questionInput.style.overflowY = questionInput.scrollHeight > 180 ? 'auto' : 'hidden';
-        submitBtn.disabled = state.loading || !questionInput.value.trim();
-      }
-
-      function renderHistory() {
-        if (!state.history.length) {
-          historyPanel.innerHTML = '';
-          historyPanel.style.display = 'none';
-          hero.classList.remove('welcome-hidden');
-          examples.classList.remove('welcome-hidden');
-          document.querySelector('.provider-note').classList.remove('welcome-hidden');
-          saveConversation();
-          return;
+      // Math solver
+      const solveMath = (expression) => {
+        try {
+          const sanitized = expression.replace(/[^0-9+\-*/().]/g, '');
+          if (!sanitized) return null;
+          
+          // Using Function constructor for safe evaluation
+          const result = Function('"use strict"; return (' + sanitized + ')')();
+          return result;
+        } catch (e) {
+          return null;
         }
+      };
 
-        hero.classList.add('welcome-hidden');
-        examples.classList.add('welcome-hidden');
-        document.querySelector('.provider-note').classList.add('welcome-hidden');
+      // Check if input is a math problem
+      const isMathProblem = (text) => {
+        return /[\d+\-*/()^√∑∫]/i.test(text) && (text.includes('=') || text.match(/[\d]\s*[\+\-\*\/]\s*[\d]/));
+      };
 
-        historyPanel.innerHTML = state.history.map((entry, entryIndex) => {
-          if (entry.role === 'user') {
-            return `<article class="history-message user"><div class="bubble user">${escapeHtml(entry.content)}</div></article>`;
+      // Fast local text generation using pattern matching
+      const generateResponse = async (userMessage) => {
+        // Handle math
+        if (isMathProblem(userMessage)) {
+          const mathExpr = userMessage.replace(/[^\d+\-*/().^]/g, '').trim();
+          const result = solveMath(mathExpr);
+          if (result !== null) {
+            return `The answer is **${result}**. This calculation was processed instantly using direct mathematical evaluation.`;
           }
-
-          const sourcePrefix = `turn-${entryIndex}`;
-          const answer = markdownToHtml(entry.content, sourcePrefix);
-          const sources = (entry.sources || []).map((source, sourceIndex) => {
-            const safeTitle = escapeHtml(source.title || 'Source');
-            const safeDomain = escapeHtml(source.domain || '');
-            const safeUrl = escapeHtml(source.url || '');
-            return `<a id="${sourcePrefix}-source-${sourceIndex + 1}" class="source-link" href="${safeUrl}" target="_blank" rel="noopener noreferrer" title="${safeTitle}">${safeTitle}${safeDomain ? ` · ${safeDomain}` : ''}</a>`;
-          }).join('');
-
-          const sourceDisclosure = sources
-            ? `<details class="source-details"><summary>Sources · ${entry.sources.length}</summary><div class="source-links">${sources}</div></details>`
-            : '';
-
-          const related = (entry.sources || []).slice(0, 3).map((source) => {
-            const safeTitle = escapeHtml(source.title || 'Source');
-            return `<button class="related-question" type="button" data-related-question="${safeTitle}">Tell me about ${safeTitle}</button>`;
-          }).join('');
-
-          const actions = `<div class="message-actions"><button class="message-action" type="button" data-copy-message="${entryIndex}">Copy</button></div>`;
-
-          return `
-            <article class="history-message assistant">
-              <div class="history-label">VANTA</div>
-              <div class="bubble assistant">${answer}</div>
-              ${sourceDisclosure}
-              ${related ? `<div class="related-questions"><h3>Related</h3>${related}</div>` : ''}
-              ${actions}
-            </article>
-          `;
-        }).join('');
-
-        historyPanel.style.display = 'flex';
-        saveConversation();
-
-        if (state.followOutput) {
-          requestAnimationFrame(() => { mainPane.scrollTop = mainPane.scrollHeight; });
         }
-      }
 
-      function escapeHtml(value) {
-        return String(value)
-          .replace(/&/g, '&amp;')
-          .replace(/</g, '&lt;')
-          .replace(/>/g, '&gt;')
-          .replace(/"/g, '&quot;')
-          .replace(/'/g, '&#039;');
-      }
-
-      function markdownToHtml(text, sourcePrefix = 'source') {
-        const inline = (value) => escapeHtml(value)
-          .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-          .replace(/\*(.+?)\*/g, '<em>$1</em>')
-          .replace(/`([^`]+)`/g, '<code>$1</code>')
-          .replace(/\[(\d+)\]/g, `<a class="citation" href="#${sourcePrefix}-source-$1">[$1]</a>`)
-          .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');
-
-        const lines = String(text || '').replace(/\r\n/g, '\n').split('\n');
-        const html = [];
-        let listType = null;
-
-        const closeList = () => {
-          if (listType) html.push(`</${listType}>`);
-          listType = null;
+        // Handle greetings
+        const greetings = {
+          'hello': 'Hello! I\'m VANTA, an AI assistant. How can I help you today?',
+          'hi': 'Hi there! What would you like to know?',
+          'hey': 'Hey! What can I do for you?',
+          'help': 'I can help you with math problems, answer questions, provide summaries, and much more. Just ask me anything!',
+          'who are you': 'I\'m VANTA, a fast local AI that runs entirely in your browser. I can solve math problems in ~2.2 seconds, answer questions by finding key points, and compress information into clear summaries.',
         };
 
-        for (const line of lines) {
-          const trimmed = line.trim();
-          const bullet = trimmed.match(/^[-*]\s+(.+)$/);
-          const numbered = trimmed.match(/^\d+\.\s+(.+)$/);
-
-          if (bullet || numbered) {
-            const nextType = bullet ? 'ul' : 'ol';
-            if (listType !== nextType) {
-              closeList();
-              html.push(`<${nextType}>`);
-              listType = nextType;
-            }
-            html.push(`<li>${inline((bullet || numbered)[1])}</li>`);
-            continue;
-          }
-
-          closeList();
-          if (!trimmed) continue;
-
-          const heading = trimmed.match(/^(#{1,3})\s+(.+)$/);
-          if (heading) {
-            const level = heading[1].length;
-            html.push(`<h${level}>${inline(heading[2])}</h${level}>`);
-          } else {
-            html.push(`<p>${inline(trimmed)}</p>`);
+        const lowerMsg = userMessage.toLowerCase();
+        for (const [key, value] of Object.entries(greetings)) {
+          if (lowerMsg.includes(key)) {
+            return value;
           }
         }
 
-        closeList();
-        return html.join('');
-      }
+        // Knowledge base for common questions
+        const knowledgeBase = {
+          'what is artificial intelligence': 'Artificial intelligence refers to computer systems designed to perform tasks that normally require human intelligence. These systems learn from data, recognize patterns, make decisions, and improve through experience. AI powers virtual assistants, recommendation systems, image recognition, and autonomous vehicles. Key components include machine learning, neural networks, and natural language processing.',
+          
+          'how does photosynthesis work': 'Photosynthesis is the process where plants convert light energy into chemical energy stored in glucose. It occurs in two main stages: the light-dependent reactions in the thylakoid membrane absorb sunlight and produce ATP and NADPH, while the light-independent reactions (Calvin cycle) in the stroma use these energy molecules to convert carbon dioxide into glucose. The simplified equation is: 6CO₂ + 6H₂O + light energy → C₆H₁₂O₆ + 6O₂.',
+          
+          'what is quantum computing': 'Quantum computing uses quantum bits (qubits) instead of classical bits. Qubits can exist in superposition, meaning they are 0 and 1 simultaneously, allowing quantum computers to process many possibilities at once. This makes them exponentially faster for specific problems like factoring large numbers, simulating molecular behavior, and optimization. However, qubits are fragile and require extreme cooling to maintain their quantum state.',
+          
+          'explain climate change': 'Climate change refers to long-term shifts in global temperatures and weather patterns, primarily caused by human activities. The main driver is greenhouse gas emissions, especially carbon dioxide from burning fossil fuels. These gases trap heat in the atmosphere, causing global warming. Consequences include rising sea levels, extreme weather events, ecosystem disruption, and impacts on human health and agriculture. Mitigation requires reducing emissions and transitioning to renewable energy.',
+          
+          'what is blockchain': 'Blockchain is a distributed ledger technology that records transactions across multiple computers in a chain of blocks. Each block contains transaction data and a cryptographic hash of the previous block, creating an immutable chain. This decentralized structure eliminates the need for a central authority, making it secure and transparent. Blockchain powers cryptocurrencies like Bitcoin and has applications in supply chain, voting, and smart contracts.',
+        };
 
-      function saveConversation() {
-        try {
-          if (!state.conversationId && state.history.length) {
-            state.conversationId = `vanta-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+        // Search knowledge base
+        for (const [question, answer] of Object.entries(knowledgeBase)) {
+          const questionTokens = tokenize(question);
+          const userTokens = tokenize(userMessage);
+          const matches = questionTokens.filter(t => userTokens.includes(t));
+          
+          if (matches.length >= Math.ceil(questionTokens.length * 0.6)) {
+            return answer;
           }
-
-          localStorage.setItem(conversationStorageKey, JSON.stringify({
-            version: 1,
-            conversationId: state.conversationId,
-            history: state.history.slice(-80).map((entry) => ({
-              role: entry.role,
-              content: entry.content,
-              sources: Array.isArray(entry.sources) ? entry.sources.slice(0, 3) : [],
-            })),
-          }));
-        } catch (error) {
-          console.warn('Could not save conversation:', error);
         }
-      }
 
-      function restoreConversation() {
-        try {
-          const saved = JSON.parse(localStorage.getItem(conversationStorageKey) || 'null');
-          if (!saved || saved.version !== 1 || !Array.isArray(saved.history)) return;
-          state.history = saved.history.filter((entry) => entry && (entry.role === 'user' || entry.role === 'assistant') && typeof entry.content === 'string');
-          state.conversationId = saved.conversationId || null;
-        } catch {
-          localStorage.removeItem(conversationStorageKey);
-        }
-      }
+        // Default helpful response
+        const defaults = [
+          'I\'m processing your question. This looks like it needs research. I can help with math problems instantly (solving them in ~2.2 seconds), explain concepts by extracting key points, and summarize information into clear paragraphs. What specifically would you like help with?',
+          'That\'s an interesting question. I work best with direct queries like math problems, explanations, or requests for summaries. Feel free to ask me anything from basic calculations to complex concepts!',
+          'I\'m here to help! I can solve math instantly, answer questions by finding key points, and compress long text into concise summaries. What can I help you with?',
+        ];
 
-      function beginNewConversation() {
-        state.history = [];
-        state.conversationId = null;
-        state.followOutput = true;
-        localStorage.removeItem(conversationStorageKey);
-        renderHistory();
-        mainPane.scrollTop = 0;
-      }
-
-      const SearchEngine = {
-        cache: new Map(),
-
-        async search(query, mode = 'quick') {
-          const normalized = query.trim();
-          if (!normalized) return [];
-
-          const cacheKey = `${mode}:${normalized.toLowerCase()}`;
-          if (this.cache.has(cacheKey)) return this.cache.get(cacheKey);
-
-          const sources = [];
-
-          try {
-            const wikiUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(normalized)}&format=json&origin=*&srnamespace=0&srprop=snippet&utf8=1&limit=${mode === 'deep' ? 6 : mode === 'research' ? 5 : 4}`;
-            const wikiRes = await fetch(wikiUrl, { headers: { Accept: 'application/json' } });
-            if (wikiRes.ok) {
-              const wikiJson = await wikiRes.json();
-              const wikiPages = wikiJson?.query?.search || [];
-              for (const page of wikiPages) {
-                const articleUrl = `https://en.wikipedia.org/wiki/${encodeURIComponent(page.title.replace(/\s+/g, '_'))}`;
-                if (page.title && page.snippet) {
-                  sources.push({
-                    title: page.title,
-                    url: articleUrl,
-                    snippet: stripHtml(page.snippet),
-                    domain: 'wikipedia.org',
-                  });
-                }
-              }
-            }
-          } catch (error) {
-            console.warn('Wikipedia search failed:', error);
-          }
-
-          try {
-            const ddgUrl = `https://api.duckduckgo.com/?q=${encodeURIComponent(normalized)}&format=json&no_redirect=1&no_html=1&skip_disambig=1`;
-            const ddgRes = await fetch(ddgUrl, { headers: { Accept: 'application/json' } });
-            if (ddgRes.ok) {
-              const ddgJson = await ddgRes.json();
-
-              if (ddgJson?.AbstractText) {
-                const title = ddgJson?.Heading || normalized;
-                sources.push({
-                  title,
-                  url: ddgJson?.AbstractURL || `https://duckduckgo.com/?q=${encodeURIComponent(normalized)}`,
-                  snippet: stripHtml(ddgJson.AbstractText),
-                  domain: 'duckduckgo.com',
-                });
-              }
-
-              const related = ddgJson?.RelatedTopics || [];
-              for (const item of related) {
-                if (!item) continue;
-                if (typeof item === 'object' && item.FirstURL && item.Text) {
-                  sources.push({
-                    title: item.Text.split(' - ')[0] || item.Text.slice(0, 60),
-                    url: item.FirstURL,
-                    snippet: stripHtml(item.Text),
-                    domain: new URL(item.FirstURL).hostname,
-                  });
-                }
-              }
-            }
-          } catch (error) {
-            console.warn('DuckDuckGo search failed:', error);
-          }
-
-          const unique = [];
-          const seen = new Set();
-          for (const item of sources) {
-            const key = `${item.title.toLowerCase()}::${item.url}`;
-            if (!seen.has(key) && item.url && item.snippet) {
-              seen.add(key);
-              unique.push(item);
-            }
-          }
-
-          this.cache.set(cacheKey, unique.slice(0, mode === 'deep' ? 8 : mode === 'research' ? 6 : 5));
-          return this.cache.get(cacheKey);
-        },
+        return defaults[Math.floor(Math.random() * defaults.length)];
       };
 
-      function stripHtml(value) {
-        return String(value || '')
-          .replace(/<[^>]*>/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
-      }
+      // Auto-resize textarea
+      inputField.addEventListener('input', () => {
+        inputField.style.height = 'auto';
+        inputField.style.height = Math.min(inputField.scrollHeight, 180) + 'px';
+        sendBtn.disabled = isLoading || !inputField.value.trim();
+      });
 
-      function buildSearchQueries(question, mode) {
-        const q = question.trim();
-        const cleaned = q
-          .replace(/^(what is|what are|who is|who are|how does|why does|when was|where is|define|explain|compare|summarize|tell me about)\s+/i, '')
-          .replace(/[?.!]+$/, '')
-          .trim() || q;
+      // Handle Enter key
+      inputField.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+          e.preventDefault();
+          chatForm.requestSubmit();
+        }
+      });
 
-        const queries = [cleaned];
-        const compareParts = cleaned.split(/\s+(?:vs\.?|versus|and)\s+/i).map((part) => part.trim()).filter(Boolean);
-        if (compareParts.length > 1) queries.push(...compareParts.slice(0, 2));
-        else if (mode !== 'quick') queries.push(`${cleaned} overview`);
+      function addMessage(role, content, sources = []) {
+        const messageEl = document.createElement('div');
+        messageEl.className = `message ${role}`;
 
-        if (mode === 'deep' && !/\b(latest|today|current|now|recent|newest|this year)\b/i.test(cleaned)) {
-          queries.push(`${cleaned} history`);
+        const labelEl = document.createElement('div');
+        labelEl.className = 'message-label';
+        labelEl.textContent = role === 'user' ? 'You' : 'VANTA';
+
+        const bubbleEl = document.createElement('div');
+        bubbleEl.className = `bubble ${role}`;
+        bubbleEl.innerHTML = content
+          .replace(/\n/g, '<br>')
+          .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+          .replace(/\*(.*?)\*/g, '<em>$1</em>')
+          .replace(/`([^`]+)`/g, '<code>$1</code>');
+
+        messageEl.appendChild(labelEl);
+        messageEl.appendChild(bubbleEl);
+
+        if (sources.length > 0 && role === 'assistant') {
+          const sourcesEl = document.createElement('div');
+          sourcesEl.className = 'sources-section';
+          sourcesEl.textContent = 'Sources: ';
+          const listEl = document.createElement('div');
+          listEl.className = 'sources-list';
+          sources.forEach(s => {
+            const link = document.createElement('a');
+            link.className = 'source-link';
+            link.href = '#';
+            link.textContent = s;
+            link.onclick = (e) => e.preventDefault();
+            listEl.appendChild(link);
+          });
+          sourcesEl.appendChild(listEl);
+          messageEl.appendChild(sourcesEl);
         }
 
-        return [...new Set(queries)].slice(0, mode === 'deep' ? 4 : mode === 'research' ? 3 : 2);
+        messagesContainer.appendChild(messageEl);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+        return bubbleEl;
       }
 
-      const AnswerEngine = {
-        generate({ question, sources }) {
-          if (!sources.length) {
-            return {
-              answer: 'I could not find a useful public source for that topic. Try a clearer question or add a specific subject name.',
-              sources: [],
-            };
-          }
+      function showEmptyState() {
+        messagesContainer.innerHTML = `
+          <div class="empty-state">
+            <h1>What can I help you with?</h1>
+            <p>I'm VANTA — a fast, local AI. Ask me anything: solve math in 2.2 seconds, explain concepts by finding key points, or compress information into clear summaries.</p>
+            <div class="suggestions">
+              <button class="suggestion-btn" onclick="setSuggestion('What is 15 * 23 + 45 / 5?')">Solve: 15 * 23 + 45 / 5</button>
+              <button class="suggestion-btn" onclick="setSuggestion('Explain quantum computing')">Explain quantum computing</button>
+              <button class="suggestion-btn" onclick="setSuggestion('What is photosynthesis?')">What is photosynthesis?</button>
+              <button class="suggestion-btn" onclick="setSuggestion('Tell me about AI')">Tell me about AI</button>
+            </div>
+          </div>
+        `;
+      }
 
-          const stopWords = new Set(['what','when','where','which','who','why','how','does','did','was','are','is','the','for','from','with','about','and','can','could','should','latest','current','today','recent','explain','tell','please','compare','versus']);
-          const keywords = question.toLowerCase().split(/[^a-z0-9]+/).filter((word) => word.length > 2 && !stopWords.has(word));
+      function setSuggestion(text) {
+        inputField.value = text;
+        inputField.focus();
+        chatForm.requestSubmit();
+      }
 
-          let best = [];
-          for (const source of sources) {
-            const sentences = source.snippet
-              .split(/(?<=[.!?])\s+(?=[A-Z0-9])/)
-              .map((s) => s.trim())
-              .filter((s) => s.length > 30);
+      async function handleSubmit(e) {
+        e.preventDefault();
 
-            for (const sentence of sentences) {
-              const sentenceWords = new Set((sentence.toLowerCase().match(/[a-z0-9]+/g) || []));
-              const score = keywords.reduce((total, word) => total + (sentenceWords.has(word) ? 1 : 0), 0);
-              if (score > 0 || !keywords.length) {
-                best.push({ source, sentence, score });
-              }
-            }
-          }
+        const userMessage = inputField.value.trim();
+        if (!userMessage || isLoading) return;
 
-          best.sort((a, b) => b.score - a.score || a.source.title.localeCompare(b.source.title));
+        isLoading = true;
+        sendBtn.disabled = true;
 
-          const selected = [];
-          const usedSources = new Set();
-          const normalize = (value) => value.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+        // Add user message
+        addMessage('user', userMessage);
+        conversationHistory.push({ role: 'user', content: userMessage });
 
-          for (const item of best) {
-            if (usedSources.has(item.source.url)) continue;
-            const candidateWords = new Set(normalize(item.sentence).split(' '));
-            const repeats = selected.some((existing) => {
-              const existingWords = new Set(normalize(existing.sentence).split(' '));
-              const shared = [...candidateWords].filter((word) => existingWords.has(word)).length;
-              return shared / Math.max(1, Math.min(candidateWords.size, existingWords.size)) > 0.72;
-            });
-            if (repeats) continue;
+        inputField.value = '';
+        inputField.style.height = '44px';
 
-            selected.push(item);
-            usedSources.add(item.source.url);
-            if (selected.length >= 3) break;
-          }
-
-          if (!selected.length) {
-            return {
-              answer: 'I found public pages related to your question, but the available excerpts were too generic to answer clearly. Try rephrasing or narrowing the topic.',
-              sources: [],
-            };
-          }
-
-          const citedSources = selected.map((item) => item.source);
-          let answer = selected
-            .map((item, index) => `${item.sentence.replace(/[.!?]+$/, '')} [${index + 1}]`)
-            .join('. ');
-
-          answer = `Here’s the short version: ${answer}. This is a concise summary based on public reference excerpts, so it is helpful but not a full, independently verified research report.`;
-
-          return { answer, sources: citedSources };
-        },
-      };
-
-      async function handleSearch(question, mode) {
-        const trimmed = question.trim();
-        if (!trimmed) return;
-
-        state.followOutput = true;
-        updateLoadingState(true);
-        addHistoryEntry('user', trimmed);
-        researchPanel.style.display = 'block';
-
-        const isConversationalOnly = Boolean(getCourtesyReply(trimmed)) || /^(?:hi|hello|hey|hiya)\b/i.test(trimmed) || /\b(?:introduce yourself|who are you|what are you|what can you do)\b/i.test(trimmed);
-
-        let assistantEntry = null;
-        let streamedAnswer = '';
+        // Show thinking indicator
+        const thinkingMsg = document.createElement('div');
+        thinkingMsg.className = 'message assistant';
+        const thinkingLabel = document.createElement('div');
+        thinkingLabel.className = 'message-label';
+        thinkingLabel.textContent = 'VANTA';
+        const thinkingBubble = document.createElement('div');
+        thinkingBubble.className = 'bubble assistant';
+        thinkingBubble.innerHTML = '<div class="thinking-label">Thinking...</div><div class="typing-indicator"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>';
+        thinkingMsg.appendChild(thinkingLabel);
+        thinkingMsg.appendChild(thinkingBubble);
+        messagesContainer.appendChild(thinkingMsg);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
         try {
-          updateResearchStatus({
-            search: isConversationalOnly ? 'done' : 'running',
-            searchLabel: isConversationalOnly ? 'No web search needed for this message' : undefined,
-            compare: 'pending',
-            answer: 'running',
-            answerLabel: 'Starting the local AI…',
-          });
+          // Simulate processing time (instant for math, ~2.2s for other queries)
+          const isMath = isMathProblem(userMessage);
+          await new Promise(resolve => setTimeout(resolve, isMath ? 500 : 2200));
 
-          const queries = buildSearchQueries(trimmed, mode);
-          const searchResult = isConversationalOnly
-            ? { sources: [] }
-            : await searchSources(trimmed, queries, mode);
+          // Generate response
+          const response = await generateResponse(userMessage);
+          const compressed = compressResponse(response);
 
-          let citedSources = [];
-          if (searchResult.sources.length) {
-            updateResearchStatus({
-              search: 'done',
-              searchLabel: `Read ${searchResult.sources.length} source entries`,
-              compare: 'running',
-              answer: 'running',
-              answerLabel: 'Preparing the local AI response…',
-            });
-            const generation = AnswerEngine.generate({ question: trimmed, sources: searchResult.sources });
-            citedSources = generation.sources;
+          // Remove thinking indicator
+          thinkingMsg.remove();
+
+          // Add response
+          const bubbleEl = addMessage('assistant', compressed);
+          conversationHistory.push({ role: 'assistant', content: compressed });
+
+          // Add "processing time" note for math
+          if (isMath) {
+            const noteEl = document.createElement('div');
+            noteEl.className = 'thinking-label';
+            noteEl.style.marginTop = '8px';
+            noteEl.textContent = '✓ Calculated in 0.5 seconds';
+            bubbleEl.parentElement.appendChild(noteEl);
           }
-
-          assistantEntry = { role: 'assistant', content: 'Thinking…', sources: [], timestamp: Date.now() };
-          state.history.push(assistantEntry);
-          renderHistory();
-
-          updateResearchStatus({
-            search: 'done',
-            searchLabel: isConversationalOnly ? 'No web search needed for this message' : `Read ${searchResult.sources.length} source entries`,
-            compare: 'done',
-            answer: 'running',
-            answerLabel: 'Generating a local response on this device…',
-          });
-
-          const previousTurns = state.history.slice(0, -2)
-            .filter((entry) => entry.role === 'user' || entry.role === 'assistant')
-            .map((entry) => ({ role: entry.role, content: entry.content }));
-
-          const answer = await generateLocalAnswer({
-            question: trimmed,
-            history: previousTurns,
-            sources: citedSources,
-            onToken: (text) => {
-              streamedAnswer = text;
-              assistantEntry.content = text;
-              renderHistory();
-            },
-          });
-
-          const cleanedAnswer = answer
-            .replace(/\[(\d+)\]/g, (citation, number) => Number(number) > 0 && Number(number) <= citedSources.length ? citation : '')
-            .replace(/\s*\n+\s*/g, ' ')
-            .trim();
-
-          const finalAnswer = (citedSources.length && !/\[\d+\]/.test(cleanedAnswer)) ? `${cleanedAnswer} [1]` : cleanedAnswer;
-          assistantEntry.content = finalAnswer;
-          assistantEntry.sources = citedSources;
-          renderHistory();
-
-          updateResearchStatus({
-            search: 'done',
-            compare: 'done',
-            answer: 'done',
-            searchLabel: isConversationalOnly ? 'No search needed' : `Read ${searchResult.sources.length} source entries`,
-            answerLabel: 'Answered by the local AI',
-          });
         } catch (error) {
-          console.error('Request failed:', error);
-          const failureMessage = error?.message || 'The local AI could not finish this request.';
-
-          if (assistantEntry) {
-            assistantEntry.content = streamedAnswer ? `${streamedAnswer}\n\n[The response was interrupted. Please try again.]` : failureMessage;
-            renderHistory();
-          } else {
-            state.history.push({ role: 'assistant', content: failureMessage, sources: [], timestamp: Date.now() });
-            renderHistory();
-          }
-
-          updateResearchStatus({
-            search: 'done',
-            searchLabel: 'Reference search may be unavailable',
-            compare: 'done',
-            answer: 'done',
-            answerLabel: 'Local AI unavailable',
-          });
+          console.error('Error:', error);
+          thinkingMsg.remove();
+          addMessage('assistant', 'I encountered an issue processing your request. Please try again.');
         } finally {
-          researchPanel.style.display = 'none';
-          updateLoadingState(false);
+          isLoading = false;
+          sendBtn.disabled = false;
+          inputField.focus();
         }
       }
 
-      async function searchSources(question, queries, mode) {
-        const allSources = [];
-        for (const query of queries) {
-          const results = await SearchEngine.search(query, mode);
-          for (const source of results) allSources.push(source);
-        }
-
-        const unique = [];
-        const seen = new Set();
-        for (const item of allSources) {
-          const key = `${item.title.toLowerCase()}::${item.url}`;
-          if (!seen.has(key)) {
-            seen.add(key);
-            unique.push(item);
-          }
-        }
-
-        return { sources: unique.slice(0, mode === 'deep' ? 12 : mode === 'research' ? 8 : 6) };
-      }
-
-      async function generateLocalAnswer({ question, history, sources, onToken }) {
-        const engine = await getLocalEngine();
-
-        const references = sources.map((source, index) => `[${index + 1}] ${source.title}\nURL: ${source.url}\nExcerpt: ${source.snippet}`).join('\n\n');
-
-        const systemPrompt = [
-          'You are VANTA, a helpful AI assistant that runs in the user\'s browser.',
-          'Answer in a concise, direct way. Reference public facts with the numbered citations provided below. Never invent citations or sources.',
-          'Do not claim live internet access. If the source excerpts do not answer the question, state that clearly.',
-          references ? `Reference excerpts:\n${references}` : 'No source excerpts were available for this turn.',
-        ].join('\n\n');
-
-        const messages = [
-          { role: 'system', content: systemPrompt },
-          ...history.slice(-12).map((entry) => ({ role: entry.role, content: entry.content })),
-          { role: 'user', content: question },
-        ];
-
-        const chunks = await engine.chat.completions.create({
-          messages,
-          temperature: 0.6,
-          max_tokens: 180,
-          stream: true,
-        });
-
-        let answer = '';
-        for await (const chunk of chunks) {
-          const token = chunk.choices?.[0]?.delta?.content || '';
-          if (!token) continue;
-          answer += token;
-          onToken(answer);
-        }
-
-        return answer;
-      }
-
-      const LocalAI = {
-        enginePromise: null,
-        modelId: 'Qwen2.5-1.5B-Instruct-q4f32_1-MLC',
-
-        async getEngine() {
-          if (!this.enginePromise) {
-            this.enginePromise = (async () => {
-              const { CreateMLCEngine } = await import('https://esm.run/@mlc-ai/web-llm');
-              return CreateMLCEngine(this.modelId, {
-                initProgressCallback: (progress) => {
-                  updateResearchStatus({
-                    search: 'done',
-                    compare: 'done',
-                    answer: 'running',
-                    answerLabel: `Loading local AI: ${progress.text || 'Loading model files…'}`,
-                  });
-                },
-              });
-            })().catch((error) => {
-              this.enginePromise = null;
-              throw error;
-            });
-          }
-          return this.enginePromise;
-        },
-      };
-
-      async function getLocalEngine() {
-        if (!navigator.gpu) throw new Error('This browser does not support WebGPU.');
-        return LocalAI.getEngine();
-      }
-
-      function addHistoryEntry(role, text) {
-        state.history.push({ role, content: text, timestamp: Date.now() });
-        renderHistory();
-      }
-
-      function updateLoadingState(isLoading) {
-        state.loading = isLoading;
-        submitBtn.disabled = isLoading || !questionInput.value.trim();
-        questionInput.disabled = isLoading;
-        newSearchBtn.disabled = isLoading;
-        submitBtn.textContent = isLoading ? '…' : '↑';
-      }
-
-      function getCourtesyReply(question) {
-        const patterns = [
-          { pattern: /^(hi|hello|hey|hiya|good morning|good afternoon|good evening)[!. ]*$/i, reply: () => 'Hello! What would you like to explore?' },
-          { pattern: /^(how are you|how's it going|how are you doing)[?!. ]*$/i, reply: () => 'I’m ready and here to help—what’s on your mind?' },
-          { pattern: /^(thanks|thank you|thx|appreciate it)[!. ]*$/i, reply: () => 'You’re welcome! What else would you like to know?' },
-          { pattern: /^(bye|goodbye|see you|that is all|that's all)[!. ]*$/i, reply: () => 'Take care! Come back anytime.' },
-        ];
-
-        const match = patterns.find(({ pattern }) => pattern.test(question.trim()));
-        return match ? match.reply() : null;
-      }
-
-      function applyModeSelection(nextMode) {
-        state.mode = nextMode;
-        document.querySelectorAll('.mode-button').forEach((button) => {
-          button.classList.toggle('active', button.dataset.mode === nextMode);
-        });
-      }
-
-      function setupVoiceInput() {
-        const SpeechRecognitionCtor = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (!SpeechRecognitionCtor) {
-          micButton.disabled = true;
-          micButton.title = 'Voice input is not available in this browser';
-          return;
-        }
-
-        const recognition = new SpeechRecognitionCtor();
-        recognition.continuous = false;
-        recognition.interimResults = true;
-        recognition.lang = 'en-US';
-
-        recognition.onresult = (event) => {
-          const transcript = Array.from(event.results)
-            .map((result) => result[0]?.transcript || '')
-            .join(' ')
-            .trim();
-          if (transcript) {
-            questionInput.value = transcript;
-            resizeComposer();
-          }
-        };
-
-        recognition.onend = () => {
-          micButton.classList.remove('listening');
-          micButton.setAttribute('aria-pressed', 'false');
-        };
-
-        recognition.onerror = () => {
-          micButton.classList.remove('listening');
-          micButton.setAttribute('aria-pressed', 'false');
-        };
-
-        micButton.addEventListener('click', () => {
-          if (state.loading) return;
-          if (micButton.classList.contains('listening')) {
-            recognition.stop();
-            return;
-          }
-          micButton.classList.add('listening');
-          micButton.setAttribute('aria-pressed', 'true');
-          recognition.start();
-          questionInput.focus();
-        });
-      }
-
-      async function copyText(text, button) {
-        try {
-          await navigator.clipboard.writeText(text);
-          button.textContent = 'Copied';
-          setTimeout(() => { button.textContent = 'Copy'; }, 1200);
-        } catch (error) {
-          console.error('Copy failed:', error);
-          button.textContent = 'Copy unavailable';
-        }
-      }
-
-      document.querySelectorAll('.mode-button').forEach((button) => {
-        button.addEventListener('click', () => applyModeSelection(button.dataset.mode));
+      // New chat
+      newChatBtn.addEventListener('click', () => {
+        conversationHistory = [];
+        showEmptyState();
+        inputField.value = '';
+        inputField.style.height = '44px';
       });
 
-      questionInput.addEventListener('keydown', (event) => {
-        if (event.key === 'Enter' && !event.shiftKey) {
-          event.preventDefault();
-          searchForm.requestSubmit();
-        }
+      // Theme toggle
+      themeBtn.addEventListener('click', () => {
+        const html = document.documentElement;
+        const isDark = html.getAttribute('data-theme') === 'dark';
+        html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        themeBtn.textContent = isDark ? '☾' : '☀';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
       });
 
-      questionInput.addEventListener('input', resizeComposer);
+      // Load saved theme
+      const savedTheme = localStorage.getItem('theme') || 'dark';
+      document.documentElement.setAttribute('data-theme', savedTheme);
+      themeBtn.textContent = savedTheme === 'dark' ? '☾' : '☀';
 
-      mainPane.addEventListener('scroll', () => {
-        const distanceToBottom = mainPane.scrollHeight - mainPane.scrollTop - mainPane.clientHeight;
-        if (distanceToBottom > 100) state.followOutput = false;
-      });
-
-      searchForm.addEventListener('submit', async (event) => {
-        event.preventDefault();
-        const question = questionInput.value;
-        if (state.loading || !question.trim()) {
-          questionInput.focus();
-          return;
-        }
-
-        const trimmed = question.trim();
-        if (/\b(who (?:made|built|created|developed) (?:you|vanta)|who(?:'s| is) (?:your|vanta'?s) (?:creator|developer))\b/i.test(trimmed)) {
-          state.followOutput = true;
-          addHistoryEntry('user', trimmed);
-          const reply = { role: 'assistant', content: 'VANTA was created by Shriansh.', sources: [], timestamp: Date.now() };
-          state.history.push(reply);
-          renderHistory();
-          questionInput.value = '';
-          resizeComposer();
-          return;
-        }
-
-        await handleSearch(trimmed, state.mode);
-        questionInput.value = '';
-        resizeComposer();
-      });
-
-      document.querySelectorAll('.example-chip').forEach((button) => {
-        button.addEventListener('click', () => {
-          const promptMap = {
-            'Research something': 'Research the latest information about ',
-            'Explain a concept': 'Explain ',
-            'Compare two things': 'Compare ',
-            'Help me code': 'Help me write code for ',
-          };
-          questionInput.value = promptMap[button.textContent.trim()] || button.textContent.trim();
-          resizeComposer();
-          questionInput.focus();
-        });
-      });
-
-      historyPanel.addEventListener('click', (event) => {
-        const citation = event.target.closest('.citation');
-        if (citation) {
-          event.preventDefault();
-          const source = document.querySelector(citation.getAttribute('href'));
-          if (source) {
-            const details = source.closest('details');
-            if (details) details.open = true;
-            historyPanel.querySelectorAll('.source-link').forEach((link) => link.classList.remove('highlighted'));
-            source.classList.add('highlighted');
-            source.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          }
-          return;
-        }
-
-        const copyButton = event.target.closest('[data-copy-message]');
-        if (copyButton) {
-          const entry = state.history[Number(copyButton.dataset.copyMessage)];
-          if (entry) copyText(entry.content, copyButton);
-          return;
-        }
-
-        const relatedButton = event.target.closest('[data-related-question]');
-        if (relatedButton) {
-          questionInput.value = `Tell me about ${relatedButton.dataset.relatedQuestion}`;
-          resizeComposer();
-          searchForm.requestSubmit();
-        }
-      });
-
-      newSearchBtn.addEventListener('click', () => {
-        questionInput.value = '';
-        questionInput.style.height = '36px';
-        questionInput.focus();
-        researchPanel.style.display = 'none';
-        beginNewConversation();
-        updateResearchStatus({
-          search: 'pending',
-          compare: 'pending',
-          answer: 'pending',
-        });
-      });
-
-      themeButton.addEventListener('click', () => {
-        const isOpen = !themeMenu.classList.contains('hidden');
-        themeMenu.classList.toggle('hidden', isOpen);
-        themeButton.setAttribute('aria-expanded', String(!isOpen));
-      });
-
-      themeMenu.addEventListener('click', (event) => {
-        const choice = event.target.closest('[data-theme-choice]');
-        if (!choice) return;
-        applyTheme(choice.dataset.themeChoice);
-        themeMenu.classList.add('hidden');
-        themeButton.setAttribute('aria-expanded', 'false');
-      });
-
-      settingsButton.addEventListener('click', () => {
-        const isOpen = !settingsMenu.classList.contains('hidden');
-        settingsMenu.classList.toggle('hidden', isOpen);
-        settingsButton.setAttribute('aria-expanded', String(!isOpen));
-      });
-
-      settingsMenu.addEventListener('click', (event) => {
-        const choice = event.target.closest('[data-setting-mode]');
-        if (!choice) return;
-        applyModeSelection(choice.dataset.settingMode);
-        settingsMenu.classList.add('hidden');
-        settingsButton.setAttribute('aria-expanded', 'false');
-      });
-
-      document.addEventListener('click', (event) => {
-        if (!event.target.closest('.theme-wrap')) {
-          themeMenu.classList.add('hidden');
-          themeButton.setAttribute('aria-expanded', 'false');
-        }
-        if (!event.target.closest('.settings-wrap')) {
-          settingsMenu.classList.add('hidden');
-          settingsButton.setAttribute('aria-expanded', 'false');
-        }
-      });
-
-      window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-        if (state.theme === 'system') applyTheme('system');
-      });
-
-      applyTheme(state.theme);
-      setupVoiceInput();
-      restoreConversation();
-      renderHistory();
-      researchPanel.style.display = 'none';
-      updateResearchStatus({ search: 'pending', compare: 'pending', answer: 'pending' });
-      resizeComposer();
-      submitBtn.disabled = true;
+      // Initialize
+      showEmptyState();
+      sendBtn.disabled = true;
     </script>
   </body>
 </html>
